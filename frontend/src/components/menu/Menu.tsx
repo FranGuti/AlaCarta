@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavBar } from "../dashboard/Header";
-import { Category } from "../models/category";
+import { Category } from "../../@types/category";
 import { Blurhash } from "react-blurhash";
 import { useParams } from 'react-router-dom';
 import { Product } from "../models/product";
@@ -10,8 +10,6 @@ import Categories from "./CategoryBar";
 
 
 const Menu = () => {
-    const src = "https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_Seine_Tour_Eiffel_2.jpg";
-    const [imageLoader, setImageLoader] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
     const { restaurantUrl } = useParams();
@@ -91,15 +89,6 @@ const Menu = () => {
 
     const productsList: Product[] = dummyProducts;
 
-    useEffect(() => {
-        const img = new Image()
-        img.onload = () => {
-            setImageLoader(true);
-        }
-        img.src = src
-    }, [src]);
-
-
 
     const handleCategoryClick = (category: Category) => {
         setSelectedCategory(category);
@@ -125,10 +114,21 @@ const Menu = () => {
 }
 
 const Banner = ({ color }: { color: string }) => {
+    const src = "https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_Seine_Tour_Eiffel_2.jpg";
+    const [imageLoader, setImageLoader] = useState(false);
+
+    useEffect(() => {
+        const img = new Image()
+        img.onload = () => {
+            setImageLoader(true);
+        }
+        img.src = src
+    }, [src]);
+
     return (
         <div className="flex">
             <div className={`${color} h-[25vh] flex w-full z-50`}>
-                <h1>CACOOOOOOOOOOOOOOOOOOONA</h1>
+                <BackgroundImage src={src} imageLoader={imageLoader}/>
             </div>
         </div>
     )

@@ -1,5 +1,5 @@
 import { AiFillPlusCircle } from "react-icons/ai"
-import { Category } from "../models/category"
+import { Category } from "../../@types/category"
 import { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl"
 

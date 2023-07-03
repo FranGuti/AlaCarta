@@ -1,3 +1,5 @@
+import { Product } from "../../@types/product"
+
 interface category {
   id: string
   title: string
@@ -21,7 +23,7 @@ interface product {
   sales: record[]
 }
 
-const dummyProducts: product[] = [
+const dummyProducts: Product[] = [
   {
     id: "prod1",
     name: "empanadas de jamon y queso epicos",
