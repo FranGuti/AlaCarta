@@ -7,7 +7,6 @@ import { Product } from "../models/product";
 import { dummyProducts } from "../dashboard/MockData";
 import { ProductThumbnail } from "../dashboard/Dashboard";
 import Categories from "./CategoryBar";
-import { AiOutlineMenu } from "react-icons/ai"
 
 
 const Menu = () => {
@@ -15,8 +14,8 @@ const Menu = () => {
     const [imageLoader, setImageLoader] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-    const [deployCategories, setDeployCategories] = useState(false);
     const { restaurantUrl } = useParams();
+
 
     const categoryList: Category[] = [
         {
@@ -30,8 +29,65 @@ const Menu = () => {
         {
             id: "3",
             title: "Rico"
+        }, {
+            id: "1",
+            title: "Vegano"
+        },
+        {
+            id: "2",
+            title: "Vegetariano"
+        },
+        {
+            id: "3",
+            title: "Rico"
+        }, {
+            id: "1",
+            title: "Vegano"
+        },
+        {
+            id: "2",
+            title: "Vegetariano"
+        },
+        {
+            id: "3",
+            title: "Rico"
+        }, {
+            id: "1",
+            title: "Vegano"
+        },
+        {
+            id: "2",
+            title: "Vegetariano"
+        },
+        {
+            id: "3",
+            title: "Rico"
+        }, {
+            id: "1",
+            title: "Vegano"
+        },
+        {
+            id: "2",
+            title: "Vegetariano"
+        },
+        {
+            id: "3",
+            title: "Rico"
+        }, {
+            id: "1",
+            title: "Vegano"
+        },
+        {
+            id: "2",
+            title: "Vegetariano"
+        },
+        {
+            id: "3",
+            title: "Rico"
         }
     ]
+
+    const color = "bg-black"
 
     const productsList: Product[] = dummyProducts;
 
@@ -43,9 +99,7 @@ const Menu = () => {
         img.src = src
     }, [src]);
 
-    const handleDeployCategoriesClick = () => {
-        setDeployCategories(!deployCategories);
-    }
+
 
     const handleCategoryClick = (category: Category) => {
         setSelectedCategory(category);
@@ -53,20 +107,31 @@ const Menu = () => {
 
     const handleProductClick = (product: Product) => {
         setSelectedProducts([...selectedProducts, product]);
-      };
+    };
 
     return (
         <>
-            <BackgroundImage src={src} imageLoader={imageLoader} />
-            <div className="fixed inset-0 scale-100">
-                <NavBar />
-                <Categories deploy={deployCategories} categories={categoryList} handleCategoryClick={handleCategoryClick} />
-                <CategoryButton handleDeployCategoriesClick={handleDeployCategoriesClick}/>
+            <NavBar />
+
+            <Banner color={color} />
+            <div className="inset-0 flex">
+
+                <Categories categories={categoryList} handleCategoryClick={handleCategoryClick} />
                 <Products products={productsList} handleProductClick={handleProductClick} />
                 <Cart products={selectedProducts} />
             </div>
         </>
     );
+}
+
+const Banner = ({ color }: { color: string }) => {
+    return (
+        <div className="flex">
+            <div className={`${color} h-[25vh] flex w-full z-50`}>
+                <h1>CACOOOOOOOOOOOOOOOOOOONA</h1>
+            </div>
+        </div>
+    )
 }
 
 function BackgroundImage({ src, imageLoader }: { src: string, imageLoader: boolean }) {
@@ -91,17 +156,17 @@ function BackgroundImage({ src, imageLoader }: { src: string, imageLoader: boole
 }
 
 const Products = ({ products, handleProductClick }: { products: Product[], handleProductClick: (product: Product) => void }) => {
-    return(
+    return (
         <>
-            <div className="flex justify-center h-screen">
-                <div className="bg-customBeige rounded-3xl w-1/2">
-                    <div className="flex items-center justify-center mt-24">
+            <div className={`flex justify-center h-[75vh] `}>
+                <div className="bg-customBeige rounded-3xl ">
+                    <div className="flex flex-col items-center justify-center mt-24">
                         <h1 className="text-3xl font-bold text-customRed">Menú</h1>
                         <hr className="bg-customPink h-1 w-72 mt-2" />
 
-                        <div className="overflow-y-auto m-3 w-80 h-[80vh]">
+                        <div className="flex flex-wrap items-center justify-center gap-4 overflow-y-scroll m-3">
                             {products.map((product, index) => (
-                                <div key={index} onClick={() => handleProductClick(product)}>
+                                <div key={index} className="flex w-1/4 justify-center" onClick={() => handleProductClick(product)}>
                                     <ProductThumbnail product={product} />
                                 </div>
                             ))}
@@ -111,11 +176,11 @@ const Products = ({ products, handleProductClick }: { products: Product[], handl
             </div>
         </>
     );
-    
+
 }
 
 const Cart = ({ products }: { products: Product[] }) => {
-    return(
+    return (
         <ul>
             <li>
                 {products.map((product, index) => (
@@ -128,15 +193,6 @@ const Cart = ({ products }: { products: Product[] }) => {
     )
 }
 
-const CategoryButton = ({ handleDeployCategoriesClick }: { handleDeployCategoriesClick: () => void }) => {
-    return(
-        <div className="bg-white rounded-3xl w-15 h-15 mt-20">
-            <button className="bg-white rounded-3xl flex items-center space-x-2 h-15 w-15" onClick={handleDeployCategoriesClick}>
-                <AiOutlineMenu className="transform h-20 w-20"/>
-            </button>
-        </div>
-        
-    )
-}
+
 
 export default Menu;
