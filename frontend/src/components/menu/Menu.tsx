@@ -3,15 +3,17 @@ import { NavBar } from "../dashboard/Header";
 import { Category } from "../../@types/category";
 import { Blurhash } from "react-blurhash";
 import { useParams } from 'react-router-dom';
-import { Product } from "../models/product";
+import { Product } from "../../@types/product";
 import { dummyProducts } from "../dashboard/MockData";
-import { ProductThumbnail } from "../dashboard/Dashboard";
 import Categories from "./CategoryBar";
 
+interface SelectedProducts {
+    [key: string]: number;
+}
 
 const Menu = () => {
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-    const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+    const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({});
     const { restaurantUrl } = useParams();
 
 
@@ -95,7 +97,14 @@ const Menu = () => {
     }
 
     const handleProductClick = (product: Product) => {
-        setSelectedProducts([...selectedProducts, product]);
+        if(!selectedProducts[product.id])
+            setSelectedProducts({...selectedProducts, [product.id]: 1});
+        else{
+            setSelectedProducts(prevSelectedProducts => ({
+                ...prevSelectedProducts,
+                [product.id]: prevSelectedProducts[product.id] + 1,
+              }))
+        }
     };
 
     return (
@@ -107,7 +116,7 @@ const Menu = () => {
 
                 <Categories categories={categoryList} handleCategoryClick={handleCategoryClick} />
                 <Products products={productsList} handleProductClick={handleProductClick} />
-                <Cart products={selectedProducts} />
+                <Cart selectedProducts={selectedProducts} products={productsList} />
             </div>
         </>
     );
@@ -146,7 +155,7 @@ function BackgroundImage({ src, imageLoader }: { src: string, imageLoader: boole
             )}
             {imageLoader && (
                 <img
-                    className="blur-lg object-cover object-center h-screen w-screen fixed"
+                    className="blur-lg object-cover object-center w-full"
                     src={src}
                     alt=""
                 />
@@ -179,18 +188,48 @@ const Products = ({ products, handleProductClick }: { products: Product[], handl
 
 }
 
-const Cart = ({ products }: { products: Product[] }) => {
+const ProductThumbnail = ({ product }: { product: Product }) => {
+    return(
+        <>
+            <div className='bg-white rounded-lg mt-5 h-24 w-72 hover:scale-105 ease-in-out duration-200'>
+                <div className='flex'>
+                    <img src={product.img} alt='' className='w-16 h-24 object-cover rounded-lg' />
+                    <div className='flex-col ml-2 mt-3 text-sm'>
+                        <h1 className='font-bold'>
+                            {product.name.length > 25 ? product.name.substring(0, 25) + '...' : product.name}
+                        </h1>
+                        <hr className="bg-customPink h-1 w-48 rounded-lg" />
+                        <h1 className='font-bold mt-1'>Precio: ${product.price}</h1>
+                        <div className='flex justify-normal gap-2 w-52  overflow-x-scroll'>
+                            <small>{product.description}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+const Cart = ({ selectedProducts, products }: { selectedProducts: SelectedProducts, products: Product[] }) => {
     return (
         <ul>
             <li>
-                {products.map((product, index) => (
-                    <div key={index}>
-                        <ProductThumbnail product={product} />
+                {Object.keys(selectedProducts).map((productId, index) => (
+                    <div key={index} >
+
+                        {products.filter(x => productId === x.id).map((product, index) => (
+                            <ProductThumbnail product={product} />
+                        ))}
+                        
                     </div>
                 ))}
             </li>
         </ul>
     )
+}
+
+const ProductInCart = () => {
+
 }
 
 

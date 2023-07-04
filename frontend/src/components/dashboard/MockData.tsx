@@ -225,6 +225,87 @@ const dummyProducts: Product[] = [
     isAvailable: true,
     sales: []
   },
+  {
+    id: "prod7",
+    name: "agua",
+    price: 100,
+    description: "aguita refrescante :D",
+    img: "https://www.cucinare.tv/wp-content/uploads/2021/09/Empanadas-fritas-o-al-horno.jpg",
+    categories: [{
+      id: "c-1",
+      title: "Food"
+    }, {
+      id: "c-2",
+      title: "Snacks"
+    }],
+    isAvailable: true,
+    sales: []
+  },
+  {
+    id: "prod8",
+    name: "agua",
+    price: 100,
+    description: "aguita refrescante :D",
+    img: "https://www.cucinare.tv/wp-content/uploads/2021/09/Empanadas-fritas-o-al-horno.jpg",
+    categories: [{
+      id: "c-1",
+      title: "Food"
+    }, {
+      id: "c-2",
+      title: "Snacks"
+    }],
+    isAvailable: true,
+    sales: []
+  },
+  {
+    id: "prod9",
+    name: "agua",
+    price: 100,
+    description: "aguita refrescante :D",
+    img: "https://www.cucinare.tv/wp-content/uploads/2021/09/Empanadas-fritas-o-al-horno.jpg",
+    categories: [{
+      id: "c-1",
+      title: "Food"
+    }, {
+      id: "c-2",
+      title: "Snacks"
+    }],
+    isAvailable: true,
+    sales: []
+  },
+  {
+    id: "prod10",
+    name: "agua",
+    price: 100,
+    description: "aguita refrescante :D",
+    img: "https://www.cucinare.tv/wp-content/uploads/2021/09/Empanadas-fritas-o-al-horno.jpg",
+    categories: [{
+      id: "c-1",
+      title: "Food"
+    }, {
+      id: "c-2",
+      title: "Snacks"
+    }],
+    isAvailable: true,
+    sales: []
+  },
+  {
+    id: "prod11",
+    name: "agua",
+    price: 100,
+    description: "aguita refrescante :D",
+    img: "https://www.cucinare.tv/wp-content/uploads/2021/09/Empanadas-fritas-o-al-horno.jpg",
+    categories: [{
+      id: "c-1",
+      title: "Food"
+    }, {
+      id: "c-2",
+      title: "Snacks"
+    }],
+    isAvailable: true,
+    sales: []
+  },
+  
 ];
 
 export { dummyProducts };

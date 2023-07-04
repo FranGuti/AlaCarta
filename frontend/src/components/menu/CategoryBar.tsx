@@ -15,12 +15,10 @@ const Categories = ({ categories, handleCategoryClick }: { categories: Category[
     const handleAnimationEnd = () => {
         if (!deployCategories)
             setIsAnimating(false);
-        console.log("TE DIJE Q NO ENTRÓ MAXO BOBO")
     }
 
     const handleAnimationStart = () => {
         setIsAnimating(true);
-        console.log("ARRANCÓO");
     }
 
     return (
