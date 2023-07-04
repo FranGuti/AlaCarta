@@ -23,7 +23,7 @@ const Categories = ({ categories, handleCategoryClick }: { categories: Category[
 
     return (
         <div className={`flex h-[75vh]
-            ${deployCategories ? 'deploy-categories' : 'collapse-categories'}`} 
+            ${deployCategories ? 'deploy-categories' : 'collapse-categories'}`}
             onAnimationStart={handleAnimationStart}
             onAnimationEnd={handleAnimationEnd}>
 
@@ -52,13 +52,15 @@ const Categories = ({ categories, handleCategoryClick }: { categories: Category[
 const CategoryThumbnail = ({ category }: { category: Category }) => {
     return (
         <>
-            <div className='bg-white rounded-lg mt-5 w-52 hover:scale-105 ease-in-out duration-200 text-center'>
-                <div className='flex flex-col items-center'>
-                    <div>
+            <div className='bg-white rounded-lg mt-5 p-2 w-52 hover:scale-110 ease-in-out duration-200 text-center'>
+                <div className='flex items-center'>
+                    <div className='flex items-center justify-center ml-3'>
                         <AiFillPlusCircle className='text-customRed' />
                     </div>
-                    <h1 className='font-bold text-center'>
-                        {category.title.length > 25 ? category.title.substring(0, 25) + '...' : category.title}
+                    <h1 className='flex-grow font-bold text-center items-center justify-center mr-2'>
+                        {category.title.length > 25
+                            ? category.title.substring(0, 25) + '...'
+                            : category.title}
                     </h1>
                 </div>
             </div>
