@@ -3,7 +3,7 @@ import { Category } from "../../@types/category"
 import { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl"
 
-const Categories = ({ categories, handleCategoryClick }: { categories: Category[], handleCategoryClick: (category: Category) => void }) => {
+const Categories = ({ categories, handleCategoryClick }: { categories: string[], handleCategoryClick: (category: string) => void }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [deployCategories, setDeployCategories] = useState(false);
 
@@ -49,7 +49,7 @@ const Categories = ({ categories, handleCategoryClick }: { categories: Category[
     )
 }
 
-const CategoryThumbnail = ({ category }: { category: Category }) => {
+const CategoryThumbnail = ({ category }: { category: string }) => {
     return (
         <>
             <div className='bg-white rounded-lg mt-5 p-2 w-52 hover:scale-110 ease-in-out duration-200 text-center'>
@@ -58,9 +58,9 @@ const CategoryThumbnail = ({ category }: { category: Category }) => {
                         <AiFillPlusCircle className='text-customRed' />
                     </div>
                     <h1 className='flex-grow font-bold text-center items-center justify-center mr-2'>
-                        {category.title.length > 25
-                            ? category.title.substring(0, 25) + '...'
-                            : category.title}
+                        {category.length > 25
+                            ? category.substring(0, 25) + '...'
+                            : category}
                     </h1>
                 </div>
             </div>
