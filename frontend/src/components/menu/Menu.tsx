@@ -8,15 +8,19 @@ import { dummyProducts } from "../dashboard/MockData";
 import Categories from "./CategoryBar";
 import { BsCart4 } from "react-icons/bs"
 import { IoMdClose, IoIosArrowUp } from "react-icons/io"
+import { useSelector, useDispatch } from "react-redux";
+import { addToSelectedProducts, subtractFromSelectedProducts, deleteSelectedProduct } from "../../redux/slices/selectedProductsSlice";
+import { RootState } from "../../redux/store";
 
-interface SelectedProducts {
+
+export interface SelectedProducts {
     [key: string]: number;
 }
 
 const Menu = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
-    const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({});
     const { restaurantUrl } = useParams();
+    const selectedProducts = useSelector((state: RootState) => state.selectedProducts.selectedProducts);
 
     const categoryList: string[] = [
         'Vegano', 'Vegetariano', 'Entradas', 'Pizzas', 'Empanadas', 'Pastas', 'Parrilla', 'Bebidas', 'Vinos', 'Tragos'
@@ -33,31 +37,10 @@ const Menu = () => {
         setSelectedCategory(category)
     }
 
+    const dispatch = useDispatch();
     const handleProductClick = (product: Product) => {
-        if (!selectedProducts[product.id])
-            setSelectedProducts({ ...selectedProducts, [product.id]: 1 });
-        else {
-            setSelectedProducts(prevSelectedProducts => ({
-                ...prevSelectedProducts,
-                [product.id]: prevSelectedProducts[product.id] + 1,
-            }))
-        }
-    };
-
-    const handleUnitLess = (product: Product) => {
-        if (!selectedProducts[product.id])
-            return;
-        if (selectedProducts[product.id] === 1) {
-            const updatedSelectedProducts = { ...selectedProducts };
-            delete updatedSelectedProducts[product.id];
-            setSelectedProducts(updatedSelectedProducts);
-        }
-        else{
-            const updatedSelectedProducts = { ...selectedProducts };
-            updatedSelectedProducts[product.id] = updatedSelectedProducts[product.id] - 1;
-            setSelectedProducts(updatedSelectedProducts);
-        }
-    }
+        dispatch(addToSelectedProducts({ productId: product.id }));
+      };
 
     return (
         <>
@@ -68,7 +51,7 @@ const Menu = () => {
 
                 <Categories categories={categoryList} handleCategoryClick={handleCategoryClick} />
                 <Products selectedCategory={selectedCategory} popularProducts={popularProducts} products={productsList} handleProductClick={handleProductClick} />
-                {Object.keys(selectedProducts).length !== 0 && <Cart selectedProducts={selectedProducts} products={productsList}  handleProductClick={handleProductClick} handleUnitLess={handleUnitLess}/>}
+                {Object.keys(selectedProducts).length !== 0 && <Cart products={productsList} />}
             </div>
         </>
     );
@@ -184,7 +167,10 @@ const ProductThumbnail = ({ product }: { product: Product }) => {
     )
 }
 
-const Cart = ({ selectedProducts, products, handleProductClick, handleUnitLess }: { selectedProducts: SelectedProducts, products: Product[], handleProductClick: (product: Product) => void, handleUnitLess: (product: Product) => void }) => {
+const Cart = ({ products }: { products: Product[] }) => {
+
+    const selectedProducts = useSelector((state: RootState) => state.selectedProducts.selectedProducts);
+    
     return (
         <div className="bg-customBeige rounded-l-3xl h-[75vh] flex flex-col justify-start ml-3 text-center items-center w-[20vw]">
             <h1 className="flex text-3xl font-bold text-customRed mt-12">
@@ -196,7 +182,7 @@ const Cart = ({ selectedProducts, products, handleProductClick, handleUnitLess }
                 {Object.keys(selectedProducts).map((productId, index) => (
                     <div className="flex " key={index}>
                         {products.filter(x => productId === x.id).map((product, index) => (
-                            <ProductInCart key={index} product={product} selectedProducts={selectedProducts} handleProductClick={handleProductClick} handleUnitLess={handleUnitLess} />
+                            <ProductInCart key={index} product={product} selectedProducts={selectedProducts} />
                         ))}
                     </div>
                 ))}
@@ -218,11 +204,24 @@ const Cart = ({ selectedProducts, products, handleProductClick, handleUnitLess }
     );
 }
 
-const ProductInCart = ({ product, selectedProducts, handleProductClick, handleUnitLess }: { product: Product, selectedProducts: SelectedProducts, handleProductClick: (product: Product) => void, handleUnitLess: (product: Product) => void }) => {
+const ProductInCart = ({ product, selectedProducts}: { product: Product, selectedProducts: SelectedProducts }) => {
+    const dispatch = useDispatch();
+
+    const handleProductClick = (product: Product) => {
+        dispatch(addToSelectedProducts({ productId: product.id }));
+      };
+      
+      const handleUnitLess = (product: Product) => {
+        dispatch(subtractFromSelectedProducts({ productId: product.id }));
+      };
+      
+      const handleResetamount = (product: Product) => {
+        dispatch(deleteSelectedProduct({ productId: product.id }));
+      };
     return (
         <>
             <div className='flex bg-white rounded-lg mt-5 h-16 w-48 p-2'>
-                <IoMdClose />
+                <IoMdClose onClick={() => handleResetamount(product)}/>
                 <div className='flex flex-col text-sm justify-center items-center w-full'>
                     <h1 className='font-bold'>
                         {product.name.length > 25 ? product.name.substring(0, 25) + '...' : product.name}
