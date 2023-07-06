@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { NavBar } from "../dashboard/Header";
 import { Category } from "../../@types/category";
 import { Blurhash } from "react-blurhash";
@@ -7,7 +7,7 @@ import { Product } from "../../@types/product";
 import { dummyProducts } from "../dashboard/MockData";
 import Categories from "./CategoryBar";
 import { BsCart4 } from "react-icons/bs"
-import { IoMdClose } from "react-icons/io"
+import { IoMdClose, IoIosArrowUp } from "react-icons/io"
 
 interface SelectedProducts {
     [key: string]: number;
@@ -19,12 +19,12 @@ const Menu = () => {
     const { restaurantUrl } = useParams();
 
     const categoryList: string[] = [
-        'Vegano', 'Vegetariano', 'Entradas', 'Pizzas', 'Empanadas', 'Pastas', 'Parrilla', 'Gaseosas',
+        'Vegano', 'Vegetariano', 'Entradas', 'Pizzas', 'Empanadas', 'Pastas', 'Parrilla', 'Bebidas', 'Vinos', 'Tragos'
     ]
 
     const color = "bg-black"
 
-    const popularProducts: Product[] = dummyProducts.slice(0, 6);
+    const popularProducts: Product[] = dummyProducts.slice(0, 8);
 
     const productsList: Product[] = dummyProducts;
 
@@ -44,6 +44,21 @@ const Menu = () => {
         }
     };
 
+    const handleUnitLess = (product: Product) => {
+        if (!selectedProducts[product.id])
+            return;
+        if (selectedProducts[product.id] === 1) {
+            const updatedSelectedProducts = { ...selectedProducts };
+            delete updatedSelectedProducts[product.id];
+            setSelectedProducts(updatedSelectedProducts);
+        }
+        else{
+            const updatedSelectedProducts = { ...selectedProducts };
+            updatedSelectedProducts[product.id] = updatedSelectedProducts[product.id] - 1;
+            setSelectedProducts(updatedSelectedProducts);
+        }
+    }
+
     return (
         <>
             <NavBar />
@@ -53,7 +68,7 @@ const Menu = () => {
 
                 <Categories categories={categoryList} handleCategoryClick={handleCategoryClick} />
                 <Products selectedCategory={selectedCategory} popularProducts={popularProducts} products={productsList} handleProductClick={handleProductClick} />
-                <Cart selectedProducts={selectedProducts} products={productsList} />
+                {Object.keys(selectedProducts).length !== 0 && <Cart selectedProducts={selectedProducts} products={productsList}  handleProductClick={handleProductClick} handleUnitLess={handleUnitLess}/>}
             </div>
         </>
     );
@@ -104,15 +119,15 @@ function BackgroundImage({ src, imageLoader }: { src: string, imageLoader: boole
 const Products = ({ selectedCategory, popularProducts, products, handleProductClick }: { selectedCategory: string, popularProducts: Product[], products: Product[], handleProductClick: (product: Product) => void }) => {
     return (
         <div className={`flex justify-center h-[75vh] bg-customBeige rounded-3xl p-5 w-full`}>
-            <div className="flex flex-col items-center justify-center md:w-[95%] p-7 border-2 border-customPink rounded-3xl h-full">
+            <div className="flex flex-col items-center justify-center border p-7 border-customPink rounded-3xl w-full h-full">
                 <h1 className="text-3xl font-bold text-customRed text-center self-center">Menú</h1>
                 <hr className="bg-customPink h-1 w-72 mt-2 mb-5" />
-                <div className="justify-center overflow-y-scroll items-center">
-                    <div className="flex-col text-xl justify-start text-left self-start ml-11">
+                <div className="flex flex-col flex-grow overflow-y-scroll">
+                    <div className="text-xl justify-start text-left self-start ml-11">
                         <h2 className="font-bold text-customRed mt-5">Más populares</h2>
                         <hr className="bg-customPink h-1 w-72 mt-2" />
                     </div>
-                    <div className="grid grid-cols-3 gap-10 h-fit m-3">
+                    <div className="flex flex-wrap gap-7 h-fit m-3">
                         {popularProducts.map((product, index) => (
                             <div key={index} className="" onClick={() => handleProductClick(product)}>
                                 <ProductThumbnail product={product} />
@@ -132,11 +147,11 @@ const Products = ({ selectedCategory, popularProducts, products, handleProductCl
 const FilteredProducts = ({ products, selectedCategory, handleProductClick }: { products: Product[], selectedCategory: String, handleProductClick: (product: Product) => void }) => {
     return (
         <>
-            <div className="flex-col text-xl justify-start text-left self-start ml-11">
+            <div className="text-xl justify-start text-left self-start ml-11">
                 <h2 className="font-bold text-customRed mt-5">{selectedCategory}</h2>
                 <hr className="bg-customPink h-1 w-72 mt-2" />
             </div>
-            <div className="grid grid-cols-3 gap-10 h-fit m-3">
+            <div className="flex flex-wrap gap-7 h-fit m-3">
                 {products.map((product, index) => (
                     <div key={index} className="" onClick={() => handleProductClick(product)}>
                         <ProductThumbnail product={product} />
@@ -150,14 +165,14 @@ const FilteredProducts = ({ products, selectedCategory, handleProductClick }: { 
 const ProductThumbnail = ({ product }: { product: Product }) => {
     return (
         <>
-            <div className='bg-white rounded-lg mt-5 h-24 w-72 hover:scale-105 ease-in-out duration-200'>
-                <div className='flex'>
+            <div className='bg-white rounded-lg h-24 w-[15vw] hover:scale-105 ease-in-out duration-200'>
+                <div className='flex w-full'>
                     <img src={product.img} alt='' className='w-16 h-24 object-cover rounded-lg' />
-                    <div className='flex-col text-sm'>
-                        <h1 className='font-bold'>
+                    <div className='text-sm'>
+                        <h1 className='flex font-bold justify-center'>
                             {product.name.length > 25 ? product.name.substring(0, 25) + '...' : product.name}
                         </h1>
-                        <hr className="bg-customPink h-1 w-48 rounded-lg" />
+                        <hr className="flex justify-center bg-customPink h-1 w-48 rounded-lg" />
                         <h1 className='font-bold mt-1'>Precio: ${product.price}</h1>
                         <div className='flex justify-normal gap-2 w-52 overflow-x-scroll'>
                             <small>{product.description}</small>
@@ -169,50 +184,58 @@ const ProductThumbnail = ({ product }: { product: Product }) => {
     )
 }
 
-const Cart = ({ selectedProducts, products }: { selectedProducts: SelectedProducts, products: Product[] }) => {
+const Cart = ({ selectedProducts, products, handleProductClick, handleUnitLess }: { selectedProducts: SelectedProducts, products: Product[], handleProductClick: (product: Product) => void, handleUnitLess: (product: Product) => void }) => {
     return (
-        <div className="bg-customBeige rounded-3xl h-[75vh] w-96 flex flex-col justify-start ml-3 text-center items-center">
+        <div className="bg-customBeige rounded-l-3xl h-[75vh] flex flex-col justify-start ml-3 text-center items-center w-[20vw]">
             <h1 className="flex text-3xl font-bold text-customRed mt-12">
                 <BsCart4 className="mr-2" />
                 Pedido
             </h1>
-            <hr className="bg-customPink h-1 w-40 mt-2 mb-4" />
-            <div className="border-2 w-fit mb-2 border-customPink rounded-3xl p-3 overflow-y-auto">
+            <hr className="flex bg-customPink h-1 w-40 mt-2 mb-4" />
+            <div className="border-2 w-fit h-[53vh] mb-2 border-customPink rounded-3xl p-3 overflow-y-auto">
                 {Object.keys(selectedProducts).map((productId, index) => (
                     <div className="flex " key={index}>
                         {products.filter(x => productId === x.id).map((product, index) => (
-                            <ProductInCart product={product} />
+                            <ProductInCart key={index} product={product} selectedProducts={selectedProducts} handleProductClick={handleProductClick} handleUnitLess={handleUnitLess} />
                         ))}
                     </div>
                 ))}
             </div>
-            <div className="flex">
+            <div className="flex justify-between items-center mt-3">
                 <h1 className="text-xl font-bold text-customRed">
                     Total: {products.reduce((accumulator, product) => {
-                            if(selectedProducts[product.id]){
-                                return accumulator + selectedProducts[product.id] * product.price;
-                            }
-                            return accumulator;
-                        }, 0)
+                        if (selectedProducts[product.id]) {
+                            return accumulator + selectedProducts[product.id] * product.price;
+                        }
+                        return accumulator;
+                    }, 0)
                     }
                 </h1>
+                <button className="rounded-3xl font-bold bg-green-500 p-2 ml-7 text-white">ORDENAR</button>
             </div>
+
         </div>
     );
 }
 
-const ProductInCart = ({ product }: { product: Product }) => {
+const ProductInCart = ({ product, selectedProducts, handleProductClick, handleUnitLess }: { product: Product, selectedProducts: SelectedProducts, handleProductClick: (product: Product) => void, handleUnitLess: (product: Product) => void }) => {
     return (
         <>
-            <div className='bg-white rounded-lg mt-5 h-16 w-48 p-2'>
+            <div className='flex bg-white rounded-lg mt-5 h-16 w-48 p-2'>
                 <IoMdClose />
-                <div className='flex flex-col text-sm justify-center items-center'>
+                <div className='flex flex-col text-sm justify-center items-center w-full'>
                     <h1 className='font-bold'>
                         {product.name.length > 25 ? product.name.substring(0, 25) + '...' : product.name}
                     </h1>
-                    <hr className="bg-customPink h-1 w-1/2 rounded-lg" />
+                    <hr className="bg-customPink h-1 w-1/2" />
                     <h1 className='font-bold mt-1'>Precio: ${product.price}</h1>
-                    
+                </div>
+                <div className="flex flex-col items-center ">
+                    <IoIosArrowUp onClick={() => handleProductClick(product)} />
+                    <div className="border w-5">
+                        <h2>{selectedProducts[product.id]}</h2>
+                    </div>
+                    <IoIosArrowUp onClick={() => handleUnitLess(product)} className="rotate-180" />
                 </div>
             </div>
         </>

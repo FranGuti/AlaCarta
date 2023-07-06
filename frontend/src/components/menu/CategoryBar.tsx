@@ -30,9 +30,9 @@ const Categories = ({ categories, handleCategoryClick }: { categories: string[],
             <div className={`bg-customBeige drop-shadow-2xl rounded-r-3xl ${isAnimating ? '' : 'absolute hidden'}`}>
                 <div className="flex flex-col items-center h-full">
                     <h1 className="text-3xl font-bold text-customRed mt-24">Categorías</h1>
-                    <hr className="bg-customPink h-1 w-72 mt-2" />
+                    <hr className="bg-customPink h-1 w-52 mt-2" />
 
-                    <div className='flex flex-col items-center overflow-y-auto mt-3 w-80 mb-8'>
+                    <div className='flex flex-col items-center overflow-y-auto mt-3 w-[15vw] mb-8'>
                         {categories.map((category, index) => (
                             <div key={index} onClick={() => handleCategoryClick(category)}>
                                 <CategoryThumbnail category={category} />
