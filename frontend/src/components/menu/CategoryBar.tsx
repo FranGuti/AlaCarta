@@ -52,7 +52,7 @@ const Categories = ({ categories, handleCategoryClick }: { categories: string[],
 const CategoryThumbnail = ({ category }: { category: string }) => {
     return (
         <>
-            <div className='bg-white rounded-lg mt-5 p-2 w-52 hover:scale-110 ease-in-out duration-200 text-center'>
+            <div className='bg-white rounded-lg mt-5 p-2 w-52 hover:scale-110 ease-in-out duration-200 text-center cursor-pointer'>
                 <div className='flex items-center'>
                     <div className='flex items-center justify-center ml-3'>
                         <AiFillPlusCircle className='text-customRed' />

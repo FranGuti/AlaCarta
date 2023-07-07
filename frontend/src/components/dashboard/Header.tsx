@@ -25,7 +25,7 @@ const NavBar = () => {
     ]
 
     return (
-        <div className='z-10 absolute w-full' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div className='z-20 absolute w-full' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <nav className={`rounded-b-3xl bg-customRed h-16
                 ${isHovered ? 'translate-y-0' : '-translate-y-16'} transition-transform duration-300`}>
                 <div className="p-5 ">
