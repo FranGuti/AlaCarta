@@ -10,6 +10,7 @@ import { addToSelectedProducts, subtractFromSelectedProducts, deleteSelectedProd
 import { RootState } from "../../redux/store";
 import Cart from "./Cart";
 import MenuItems from "./MenuItems";
+import Editor from "./Editor";
 
 
 export interface SelectedProducts {
@@ -20,7 +21,7 @@ const Menu = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
     const { restaurantUrl } = useParams();
     const selectedProducts = useSelector((state: RootState) => state.selectedProducts.selectedProducts);
-
+    const permisos = 'manager';
     const categoryList: string[] = [
         'Vegano', 'Vegetariano', 'Entradas', 'Pizzas', 'Empanadas', 'Pastas', 'Parrilla', 'Bebidas', 'Vinos', 'Tragos'
     ]
@@ -50,7 +51,7 @@ const Menu = () => {
 
                 <Categories categories={categoryList} handleCategoryClick={handleCategoryClick} />
                 <MenuItems selectedCategory={selectedCategory} popularProducts={popularProducts} products={productsList} handleProductClick={handleProductClick} />
-                {Object.keys(selectedProducts).length !== 0 && <Cart products={productsList} />}
+                {permisos === 'manager' ? <Editor/> : Object.keys(selectedProducts).length !== 0 && <Cart products={productsList} />}
             </div>
         </>
     );
