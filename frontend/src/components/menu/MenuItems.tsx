@@ -53,13 +53,13 @@ const ProductThumbnail = ({ product }: { product: Product }) => {
             <div className='bg-white rounded-lg h-24 w-[15vw] hover:scale-105 ease-in-out duration-200 cursor-pointer'>
                 <div className='flex w-full'>
                     <img src={product.img} alt='' className='w-16 h-24 object-cover rounded-lg' />
-                    <div className='text-sm'>
+                    <div className='text-sm text-ellipsis'>
                         <h1 className='flex font-bold justify-center'>
                             {product.name.length > 25 ? product.name.substring(0, 25) + '...' : product.name}
                         </h1>
                         <hr className="flex justify-center bg-customPink h-1 w-48 rounded-lg" />
-                        <h1 className='font-bold mt-1'>Precio: ${product.price}</h1>
-                        <div className='flex justify-normal gap-2 w-52 overflow-x-scroll'>
+                        <h1 className='ml-2 font-bold mt-1'>Precio: ${product.price}</h1>
+                        <div className='ml-2 flex justify-normal gap-2 w-52 overflow-x-scroll'>
                             <small>{product.description}</small>
                         </div>
                     </div>
