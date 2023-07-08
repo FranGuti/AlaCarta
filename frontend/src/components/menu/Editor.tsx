@@ -1,10 +1,16 @@
 import { GiPaintBrush } from "react-icons/gi"
 import { SketchPicker } from 'react-color';
 import reactCSS from 'reactcss'
-import { useState } from "react";
+import { useState, CSSProperties } from "react";
+import { FaEdit } from "react-icons/fa";
 
 const Editor = () => {
-    const [colorState, setColorState] = useState<any>({color: });
+    const [colorState, setColorState] = useState<any>({ rgb: {
+        r: '241',
+        g: '112',
+        b: '19',
+        a: '1',
+      }});
     const [deployColors, setDeployColors] = useState<boolean>(false);
 
     const handleClick = () => {
@@ -16,20 +22,21 @@ const Editor = () => {
     }
 
     const handleChange = (color: any) => {
-        setColorState({ color: color.hex });
+        setColorState(color);
     };
 
     const save = () => {
         // TODO set en la base de datos el estilo actual
+        console.log(colorState.hex)
     }
 
     const styles = reactCSS({
         'default': {
             color: {
                 width: '36px',
-                height: '14px',
+                height: '32px',
                 borderRadius: '2px',
-                background: `rgba(${colorState.color.r}, ${colorState.color.g}, ${colorState.color.b}, ${colorState.color.a})`,
+                background: `rgba(${colorState.rgb.r}, ${colorState.rgb.g}, ${colorState.rgb.b}, ${colorState.rgb.a})`,
             },
             swatch: {
                 padding: '5px',
@@ -40,11 +47,12 @@ const Editor = () => {
                 cursor: 'pointer',
             },
             popover: {
-                position: 'absolute',
+                position: 'absolute' as const,
                 zIndex: '2',
-            },
+                bottom: '10px',
+              },
             cover: {
-                position: 'fixed',
+                position: 'fixed' as const,
                 top: '0px',
                 right: '0px',
                 bottom: '0px',
@@ -77,10 +85,9 @@ const Editor = () => {
                     </div>
                     {deployColors ? <div style={styles.popover}>
                         <div style={styles.cover} onClick={handleClose} />
-                        <SketchPicker color={colorState} onChange={handleChange} />
+                        <SketchPicker color={colorState.rgb} onChange={handleChange} />
                     </div> : null}
                 </div>
-                <SketchPicker color={colorState.background} onChangeComplete={handleChangeComplete} />
             </div>
             <div className="flex justify-items-end items-center mt-3">
                 <button className="rounded-3xl font-bold bg-green-600 p-2 ml-7 text-white" onClick={save}>Guardar</button>
