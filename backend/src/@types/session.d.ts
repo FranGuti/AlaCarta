@@ -5,7 +5,7 @@ import { UserCategoriesType } from "./modelTypes";
 declare module "express-session" {
     interface SessionData {
         user: {
-            name: string;
+            name?: string;
             email: string;
             userCategories: UserCategoriesType[];
         };

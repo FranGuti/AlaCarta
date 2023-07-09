@@ -22,18 +22,29 @@ const UserRestaurants = ({ sessionUser }: { sessionUser: UserType }) => {
                 >
                     <div className="absolute left-2 flex gap-2 w-full">
                         <h1 className="overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[30%]">
-                            {userCategory.restaurantName}
+                            {userCategory.restaurant.name}
                         </h1>
                         <i className="text-sm text-slate-700 opacity-30 ml-1">
                             ~{employeeCategoryEnum[userCategory.categoryEnum]}
                         </i>
                     </div>
-                    <Link
-                        to={`/${userCategory.restaurantUrl}/dashboard`}
-                        className={`absolute right-2 drop-shadow-4xl text-sm border text-slate-900 ${buttonProps[i % buttonProps.length]} sm:p-2 p-1 rounded-lg hover:bg-transparent ease-in-out duration-300`}
-                    >
-                        Dashboard
-                    </Link>
+                    {
+                        userCategory.categoryEnum <= employeeCategoryEnum.Manager ? (
+                            <Link
+                                to={`/${userCategory.restaurant.urlSuffix}/dashboard`}
+                                className={`absolute right-2 drop-shadow-4xl text-sm border text-slate-900 ${buttonProps[i % buttonProps.length]} sm:p-2 p-1 rounded-lg hover:bg-transparent ease-in-out duration-300`}
+                            >
+                                Dashboard
+                            </Link>
+                        ) : (
+                            <Link
+                                to={`/${userCategory.restaurant.urlSuffix}/orders`}
+                                className={`absolute right-2 drop-shadow-4xl text-sm border text-slate-900 ${buttonProps[i % buttonProps.length]} sm:p-2 p-1 rounded-lg hover:bg-transparent ease-in-out duration-300`}
+                            >
+                                Orders
+                            </Link>
+                        )
+                    }
                 </div>
             ))}
         </div>

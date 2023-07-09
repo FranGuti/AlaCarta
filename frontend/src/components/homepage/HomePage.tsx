@@ -12,6 +12,7 @@ import { RootState } from "../../redux/store"
 import { useDispatch } from "react-redux"
 import { setCurrentUser } from "../../redux/slices/currentUserSlice"
 import UserRestaurants from "./UserRestaurants"
+import RegisterAcountPopUp from "../auth/RegisterAcountPopUp"
 
 const src = "https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_Seine_Tour_Eiffel_2.jpg"
 
@@ -19,16 +20,18 @@ const HomePage = () => {
     const [imageLoader, setImageLoader] = useState(false)
     const [showLogin, setShowLogin] = useState(false)
     const [showRegister, setShowRegister] = useState(false)
+    const [showRegisterAccount, setShowRegisterAccount] = useState(false)
     const [showAbout, setShowAbout] = useState(false)
     const sessionUser = useSelector((state: RootState) => state.currentUser.user)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if ((showLogin && showAbout) || (showRegister && showAbout)) {
+        if ((showLogin && showAbout) || (showRegister && showAbout) || (showRegisterAccount && showAbout)) {
             setShowLogin(false)
             setShowRegister(false)
+            setShowRegisterAccount(false)
         }
-    }, [showLogin, showRegister, showAbout])
+    }, [showLogin, showRegister, showRegisterAccount, showAbout])
 
     useEffect(() => {
         const img = new Image()
@@ -44,6 +47,10 @@ const HomePage = () => {
 
     const toggleRestaurantRegister = () => {
         setShowRegister(!showRegister)
+    }
+
+    const toggleRegisterAccount = () => {
+        setShowRegisterAccount(!showRegisterAccount)
     }
 
     const toggleAbout = () => {
@@ -73,6 +80,7 @@ const HomePage = () => {
             <div className="fixed inset-0 flex items-center justify-evenly flex-col">
                 <LoginPopup showLogin={showLogin} setShowLogin={setShowLogin} />
                 <RestaurantRegisterPopUp showRegister={showRegister} setShowRegister={setShowRegister} />
+                <RegisterAcountPopUp showRegisterAccount={showRegisterAccount} setShowRegisterAccount={setShowRegisterAccount} />
                 <AboutPopUp showAbout={showAbout} setShowAbout={setShowAbout} />
                 <div className="fixed inset-0 flex items-center justify-evenly flex-col">
                     <button
@@ -84,12 +92,17 @@ const HomePage = () => {
                         AlaCarta{sessionUser && ` & ${sessionUser?.name}`}
                     </h1>
                     {sessionUser && <UserRestaurants sessionUser={sessionUser} />}
-                    <div className="flex items-center justify-center gap-5 mt-2 mb-4">
+                    <div className="flex sm:flex-row flex-col items-center justify-center gap-5 mt-2 mb-4">
                         {
                             !sessionUser &&
-                            <button
-                                className="bg-white rounded-xl drop-shadow-4xl p-1 sm:p-2 border border-white hover:bg-transparent hover:text-white ease-in-out duration-300"
-                                onClick={toggleLogin}>Login</button>
+                            <>
+                                <button
+                                    className="bg-white rounded-xl drop-shadow-4xl p-1 sm:p-2 border border-white hover:bg-transparent hover:text-white ease-in-out duration-300"
+                                    onClick={toggleLogin}>Login</button>
+                                <button
+                                    className="bg-white rounded-xl drop-shadow-4xl p-1 sm:p-2 border border-white hover:bg-transparent hover:text-white ease-in-out duration-300"
+                                    onClick={toggleRegisterAccount}>Register Account</button>
+                            </>
                         }
                         {
                             sessionUser &&

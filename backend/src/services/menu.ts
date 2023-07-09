@@ -22,9 +22,24 @@ const createMenuService = async (props: {
     return newMenu;
 };
 
+const updateMenuService = async (props: {
+    banner: string;
+    color: string;
+    restaurant: RestaurantType;
+}) => {
+    const { banner, color, restaurant } = props;
+    if (!restaurant.menu) return null;
+    const menu = await Menu.findById(restaurant.menu);
+    if (!menu) return null;
+    if (banner) menu.banner = banner;
+    if (color) menu.color = color;
+    await menu.save();
+    return menu;
+};
+
 const getMenuOfRestaurant = async (restaurant: RestaurantType) => {
     const menu = await Menu.findById(restaurant.menu);
     return menu;
 };
 
-export { createMenuService, getMenuOfRestaurant };
+export { createMenuService, updateMenuService, getMenuOfRestaurant };

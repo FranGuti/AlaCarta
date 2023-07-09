@@ -24,15 +24,11 @@ const registerValidation = async (
 ) => {
     if (!req.session.user) return res.status(401).send("Not logged in");
 
-    const { name, email, password, restaurantUrl, categoryEnum } = req.body;
-    if (!name || !email || !password || !restaurantUrl || !categoryEnum) {
+    const { email, restaurantUrl, categoryEnum } = req.body;
+    if (!email || !restaurantUrl || !categoryEnum) {
         return res.status(400).send("Missing fields");
     }
-    if (
-        !passwordRegex.test(password) ||
-        !emailRegex.test(email) ||
-        !urlSuffixRegex.test(restaurantUrl)
-    ) {
+    if (!emailRegex.test(email) || !urlSuffixRegex.test(restaurantUrl)) {
         return res.status(400).send("Invalid Information");
     }
 
@@ -49,11 +45,15 @@ const registerValidation = async (
         restaurantUrl,
         req.session.user.email
     );
-    if (isNaN(categoryOfUser as number))
+    if (isNaN(categoryOfUser as number)) {
         return res.status(401).send("Not authorized");
+    }
     if (
-        category <= employeeCategoryEnum.Manager &&
-        categoryOfUser !== employeeCategoryEnum.Owner
+        (category <= employeeCategoryEnum.Manager &&
+            (categoryOfUser as number) !== employeeCategoryEnum.Owner) ||
+        (category === employeeCategoryEnum.Employee &&
+            (categoryOfUser as number) > employeeCategoryEnum.Manager) ||
+        (categoryOfUser as number) === employeeCategoryEnum.Employee
     ) {
         return res.status(401).send("Not authorized");
     }
@@ -87,4 +87,27 @@ const registerRestaurantValidation = (
     next();
 };
 
-export { loginValidation, registerValidation, registerRestaurantValidation };
+const changeUserInfoValidation = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { name, email, password, changeInfoCode } = req.body;
+    if (!name || !email || !password || !changeInfoCode) {
+        return res.status(400).send("Missing fields");
+    }
+    if (
+        (password && !passwordRegex.test(password)) ||
+        (email && !emailRegex.test(email))
+    ) {
+        return res.status(400).send("Invalid Information");
+    }
+    next();
+};
+
+export {
+    loginValidation,
+    registerValidation,
+    registerRestaurantValidation,
+    changeUserInfoValidation,
+};

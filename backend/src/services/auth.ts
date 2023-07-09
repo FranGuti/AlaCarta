@@ -1,9 +1,10 @@
-import { ObjectId } from "mongodb";
+import { Types } from "mongoose";
 import { hashPassword, comparePassword } from "../utils/hasher";
 import { getDefaultProductCategories } from "../utils/defaultValues";
 import { employeeCategoryEnum } from "../@types/enums";
 import User from "../models/User";
 import Restaurant from "../models/Restaurant";
+import { mailingService } from "./mailing";
 
 const authenticateUser = async (email: string, password: string) => {
     const user = await User.findOne({ email });
@@ -14,44 +15,49 @@ const authenticateUser = async (email: string, password: string) => {
 };
 
 const createUser = async (
-    name: string,
     email: string,
-    password: string,
     restaurantUrl: string,
     categoryEnum: number
 ) => {
     const existingUser = await User.findOne({ email });
     const restaurant = await Restaurant.findOne({ urlSuffix: restaurantUrl });
 
-    if (existingUser || !restaurant) return null;
+    if (!restaurant) return null;
+    if (existingUser) {
+        existingUser.userCategories.push({
+            restaurant: restaurant._id,
+            categoryEnum: categoryEnum,
+        });
+        await existingUser.save();
+        restaurant.employees.push(existingUser._id);
+        await restaurant.save();
+        return existingUser;
+    }
 
-    const hashedPassword = hashPassword(password);
     const newUser = new User({
-        name,
         email,
-        password: hashedPassword,
         userCategories: [
             {
                 restaurant: restaurant._id,
-                restaurantName: restaurant.name,
-                restaurantUrl: restaurant.urlSuffix,
                 categoryEnum: categoryEnum,
             },
         ],
+        changeInfoCode: hashPassword(email),
     });
     await newUser.save();
+    await mailingService(email, newUser.changeInfoCode as string);
     restaurant.employees.push(newUser._id);
     await restaurant.save();
     return newUser;
 };
 
 const updateUser = async (
-    userId: ObjectId,
+    userId: Types.ObjectId,
     newFields: {
         name?: string;
         email?: string;
         password?: string;
-        newRestaurant?: ObjectId;
+        newRestaurant?: Types.ObjectId;
         newRestaurantName?: string;
         newRestaurantUrl?: string;
         newCategoryEnum?: number;
@@ -66,9 +72,7 @@ const updateUser = async (
     if (newFields.newRestaurant) {
         user.userCategories.push({
             restaurant: newFields.newRestaurant,
-            restaurantName: newFields.newRestaurantName,
-            restaurantUrl: newFields.newRestaurantUrl,
-            categoryEnum: newFields.newCategoryEnum,
+            categoryEnum: newFields.newCategoryEnum!,
         });
     }
     user.save();
@@ -130,4 +134,26 @@ const createRestaurant = async (
     }
 };
 
-export { authenticateUser, updateUser, createUser, createRestaurant };
+const changeUserInfoService = async (
+    email: string,
+    name: string,
+    password: string,
+    changeInfoCode: string
+) => {
+    const user = await User.findOne({ email });
+    if (!user) return null;
+    if (user.changeInfoCode !== changeInfoCode) return null;
+    user.name = name;
+    user.password = hashPassword(password);
+    user.changeInfoCode = undefined;
+    await user.save();
+    return user;
+};
+
+export {
+    authenticateUser,
+    updateUser,
+    createUser,
+    createRestaurant,
+    changeUserInfoService,
+};

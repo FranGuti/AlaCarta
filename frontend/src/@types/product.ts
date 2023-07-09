@@ -1,13 +1,13 @@
-import { Category } from "./category"
-import { Record } from "./record"
-
 export interface Product {
-    id: string
+    _id: string
     name: string
+    picture: string
     price: number
     description: string
-    img: string
-    categories: Category[] 
+    productCategories: string[] 
     isAvailable: boolean
-    sales: Record[] 
+    sells: number 
+    createdAt: Date
+    updatedAt: Date
 }
+

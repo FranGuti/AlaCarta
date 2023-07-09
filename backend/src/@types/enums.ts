@@ -4,4 +4,11 @@ enum employeeCategoryEnum {
     Employee,
 }
 
-export { employeeCategoryEnum };
+enum orderStatusEnum {
+    Received,
+    Preparing,
+    Delivered,
+    Cancelled,
+}
+
+export { employeeCategoryEnum, orderStatusEnum };

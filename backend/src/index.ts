@@ -51,7 +51,7 @@ app.use(populateSession);
 app.use(logRequests);
 
 // middleware to check if user is logged in before accessing routes
-app.use(/^\/api(?!\/auth).*$/, (req, res, next) => {
+app.use(/^\/api(?!\/(auth|[^/]+\/orders)).*$/, (req, res, next) => {
     if (req.session.user) next();
     else res.sendStatus(401);
 });
@@ -59,8 +59,6 @@ app.use(/^\/api(?!\/auth).*$/, (req, res, next) => {
 // Routes
 app.use("/api/auth", authRoute);
 app.use("/api/:restaurantUrl", setRestaurantUrlInSession, restaurantRoute);
-
-// TODO deletion and cascade deletion
 
 const start = async () => {
     try {

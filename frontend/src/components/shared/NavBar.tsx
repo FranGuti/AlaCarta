@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
-const NavBar = () => {
+export const NavBar = () => {
 
     const [isHovered, setIsHovered] = useState(false);
     const { restaurantUrl } = useParams()
@@ -20,7 +20,7 @@ const NavBar = () => {
         { title: 'Home', to: "/" },
         { title: 'DashBoard', to: `/${restaurantUrl}/dashboard` },
         { title: 'Menú', to: `/${restaurantUrl}/menu` },
-        { title: 'Pedidos', to: "/" },
+        { title: 'Pedidos', to:  `/${restaurantUrl}/orders` },
         { title: 'Empleados', to: "/" }
     ]
 
@@ -43,5 +43,3 @@ const NavBar = () => {
         </div>
     );
 };
-
-export { NavBar };

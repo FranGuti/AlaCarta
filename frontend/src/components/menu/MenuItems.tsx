@@ -13,7 +13,7 @@ const MenuItems = ({ selectedCategory, popularProducts, products, handleProductC
                         <hr className="bg-customPink h-1 w-72 mt-2" />
                     </div>
                     <div className="flex flex-wrap gap-7 h-fit m-3">
-                        {popularProducts.map((product, index) => (
+                        {popularProducts?.map((product, index) => (
                             <div key={index} className="" onClick={() => handleProductClick(product)}>
                                 <ProductThumbnail product={product} />
                             </div>
@@ -37,7 +37,7 @@ const FilteredProducts = ({ products, selectedCategory, handleProductClick }: { 
                 <hr className="bg-customPink h-1 w-72 mt-2" />
             </div>
             <div className="flex flex-wrap gap-7 h-fit m-3">
-                {products.map((product, index) => (
+                {products?.map((product, index) => (
                     <div key={index} className="" onClick={() => handleProductClick(product)}>
                         <ProductThumbnail product={product} />
                     </div>
@@ -52,7 +52,7 @@ const ProductThumbnail = ({ product }: { product: Product }) => {
         <>
             <div className='bg-white rounded-lg h-24 w-[15vw] hover:scale-105 ease-in-out duration-200 cursor-pointer'>
                 <div className='flex w-full'>
-                    <img src={product.img} alt='' className='w-16 h-24 object-cover rounded-lg' />
+                    <img src={product.picture} alt='' className='w-16 h-24 object-cover rounded-lg' />
                     <div className='text-sm text-ellipsis'>
                         <h1 className='flex font-bold justify-center'>
                             {product.name.length > 25 ? product.name.substring(0, 25) + '...' : product.name}

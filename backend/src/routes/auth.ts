@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    changeUserInfoController,
     loginController,
     logoutController,
     registerController,
@@ -10,13 +11,20 @@ import {
     loginValidation,
     registerValidation,
     registerRestaurantValidation,
-} from "../middlewares/validation";
+    changeUserInfoValidation,
+} from "../middlewares/authValidation";
 
 const router = Router();
 
 router.post("/login", loginValidation, loginController);
 
 router.post("/register", registerValidation, registerController);
+
+router.put(
+    "/changeUserInfo",
+    changeUserInfoValidation,
+    changeUserInfoController
+);
 
 router.post(
     "/registerRestaurant",

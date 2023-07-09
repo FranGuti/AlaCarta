@@ -1,16 +1,17 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { NavBar } from "../dashboard/Header";
+import { useEffect, useState } from "react";
+import { NavBar } from "../shared/NavBar";
 import { Blurhash } from "react-blurhash";
 import { useParams } from 'react-router-dom';
 import { Product } from "../../@types/product";
 import { dummyProducts } from "../dashboard/MockData";
 import Categories from "./CategoryBar";
 import { useSelector, useDispatch } from "react-redux";
-import { addToSelectedProducts, subtractFromSelectedProducts, deleteSelectedProduct } from "../../redux/slices/selectedProductsSlice";
+import { addToSelectedProducts } from "../../redux/slices/selectedProductsSlice";
 import { RootState } from "../../redux/store";
 import Cart from "./Cart";
 import MenuItems from "./MenuItems";
 import Editor from "./Editor";
+import axios from 'axios';
 
 
 
@@ -26,12 +27,29 @@ const Menu = () => {
     const categoryList: string[] = [
         'Vegano', 'Vegetariano', 'Entradas', 'Pizzas', 'Empanadas', 'Pastas', 'Parrilla', 'Bebidas', 'Vinos', 'Tragos'
     ]
+    const [products, setProducts] = useState<Product[] | null>();
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:8080/api/${restaurantUrl}/products?category=${selectedCategory === 'Todas'? '': selectedCategory}`,
+                    {
+                        withCredentials: true,
+                    }
+                );
+                if (res.status === 404) return
+                setProducts(res.data)
+            } catch (err) {
+                return
+            }
+        };
+        fetchProducts()
+    }, [selectedCategory]);
 
     const color = "bg-black"
 
     const popularProducts: Product[] = dummyProducts.slice(0, 8);
-
-    const productsList: Product[] = dummyProducts;
 
 
     const handleCategoryClick = (category: string) => {
@@ -40,7 +58,7 @@ const Menu = () => {
 
     const dispatch = useDispatch();
     const handleProductClick = (product: Product) => {
-        dispatch(addToSelectedProducts({ productId: product.id }));
+        dispatch(addToSelectedProducts({ productId: product._id }));
       };
 
     return (
@@ -51,8 +69,8 @@ const Menu = () => {
             <div className="inset-0 flex">
 
                 <Categories categories={categoryList} handleCategoryClick={handleCategoryClick} />
-                <MenuItems selectedCategory={selectedCategory} popularProducts={popularProducts} products={productsList} handleProductClick={handleProductClick} />
-                {permisos === 'manager' ? <Editor/> : Object.keys(selectedProducts).length !== 0 && <Cart products={productsList} />}
+                <MenuItems selectedCategory={selectedCategory} popularProducts={popularProducts} products={products as Product[]} handleProductClick={handleProductClick} />
+                {permisos === 'manager' ? <Editor/> : Object.keys(selectedProducts).length !== 0 && <Cart products={products as Product[]} />}
             </div>
         </>
     );

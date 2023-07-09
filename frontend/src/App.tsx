@@ -3,7 +3,7 @@ import HomePage from './components/homepage/HomePage'
 import { useGetSession } from './hooks/sessionHooks'
 import Dashboard from './components/dashboard/Dashboard'
 import Menu from './components/menu/Menu'
-
+import Orders from './components/orders/Orders'
 function App() {
 
   useGetSession()
@@ -14,6 +14,7 @@ function App() {
         <Route path='/:restaurantUrl/dashboard' element={<Dashboard />} />
         <Route path='/' element={<HomePage />} />
         <Route path='/:restaurantUrl/menu' element={<Menu />} />
+        <Route path='/:restaurantUrl/orders' element={<Orders/>} />
       </Routes>
     </Router>
   )

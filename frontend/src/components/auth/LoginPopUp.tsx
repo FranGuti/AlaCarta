@@ -7,7 +7,7 @@ import { setCurrentUser } from '../../redux/slices/currentUserSlice'
 
 
 const LoginPopUp = ({ showLogin, setShowLogin }:
-    { showLogin: boolean, setShowLogin: Function }) => {
+    { showLogin: boolean, setShowLogin: (show: boolean) => void }) => {
 
     const dispatch = useDispatch()
 

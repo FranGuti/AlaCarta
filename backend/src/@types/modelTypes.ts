@@ -4,15 +4,12 @@ interface UserType extends Document {
     createdAt: Date;
     updatedAt: Date;
     email: string;
-    password: string;
-    name: string;
-    userCategories: Types.DocumentArray<{
-        restaurant: Types.ObjectId;
-        categoryEnum: number;
-    }>;
+    password?: string;
+    name?: string;
+    userCategories: UserCategoriesType[];
 }
 
-interface UserCategoriesType extends Document {
+interface UserCategoriesType {
     restaurant: Types.ObjectId;
     categoryEnum: number;
 }
